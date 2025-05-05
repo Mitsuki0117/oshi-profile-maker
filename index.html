@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <title>♡推しプロフィールメーカー♡</title>
+  <link href="https://fonts.googleapis.com/css2?family=Kiwi+Maru:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Kiwi Maru', sans-serif;
+      margin: 0;
+      padding: 0;
+      background: linear-gradient(to bottom, #ffeef3, #ffffff);
+      background-image: url('background.png');
+      overflow-x: hidden;
+    }
+
+    /* 星アニメーション */
+    body::before {
+      content: "";
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: url('https://www.transparenttextures.com/patterns/stardust.png');
+      opacity: 0.5;
+      z-index: 0;
+      animation: twinkle 20s linear infinite;
+    }
+
+    @keyframes twinkle {
+      0% { background-position: 0 0; }
+      100% { background-position: 1000px 1000px; }
+    }
+
+    .container {
+      max-width: 500px;
+      margin: 40px auto;
+      background: #fffafa;
+      border-radius: 20px;
+      padding: 20px;
+      position: relative;
+      box-shadow: 0 0 15px rgba(0,0,0,0.1);
+      z-index: 1;
+    }
+
+    .title-cloud {
+      text-align: center;
+      background: #ffffff;
+      padding: 20px;
+      margin-bottom: 20px;
+      border-radius: 40px;
+      box-shadow: 0 0 15px rgba(255, 192, 203, 0.6);
+      font-size: 24px;
+      color: #f77c9e;
+      font-weight: bold;
+      position: relative;
+    }
+
+    label {
+      display: block;
+      margin: 10px 0 5px;
+      font-weight: bold;
+      color: #b36c84;
+    }
+
+    input[type="text"],
+    input[type="url"],
+    textarea {
+      width: 100%;
+      padding: 8px;
+      border-radius: 10px;
+      border: 1px solid #ddd;
+      box-sizing: border-box;
+      font-size: 14px;
+    }
+
+    input[type="file"] {
+      margin-bottom: 10px;
+    }
+
+    button {
+      margin: 10px 5px 0 0;
+      padding: 10px 15px;
+      border: none;
+      border-radius: 20px;
+      background-color: #f77c9e;
+      color: white;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    .animal {
+      position: absolute;
+      width: 70px;
+      z-index: 2;
+    }
+
+    .dog {
+      bottom: 10px;
+      left: 10px;
+    }
+
+    .cat {
+      bottom: 10px;
+      right: 10px;
+    }
+
+    .share-options {
+      display: none;
+      margin-top: 10px;
+      text-align: center;
+    }
+
+    .share-options button {
+      margin: 5px;
+    }
+    textarea {
+  resize: none; /* リサイズ禁止（右下の点々消える） */
+ }
+ @media screen and (max-width: 600px) {
+  .container {
+    margin: 20px 10px;
+    padding: 15px;
+  }
+
+  .title-cloud {
+    font-size: 20px;
+    padding: 15px;
+  }
+
+  input[type="text"],
+  input[type="url"],
+  textarea {
+    font-size: 16px;
+  }
+
+  button {
+    font-size: 14px;
+    padding: 8px 12px;
+  }
+}
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <div class="title-cloud">♡推しプロフィールメーカー♡</div>
+
+    <label>画像アップロード：</label>
+    <input type="file" accept="image/*">
+    <label>名前：</label>
+    <input type="text">
+    <label>あだ名：</label>
+    <input type="text">
+    <label>一言：</label>
+    <input type="text">
+    <label>出会い：</label>
+    <input type="text">
+    <label>ここが好き：</label>
+    <textarea rows="2"></textarea>
+    <label>誕生日：</label>
+    <input type="text">
+    <label>好きな食べ物：</label>
+    <input type="text">
+    <label>SNSリンク（任意）：</label>
+    <input type="url">
+
+    <div style="margin-top: 15px; text-align: center;">
+      <button onclick="showShareOptions()">完成してシェア</button>
+      <button onclick="addProfile()">プロフィール追加</button>
+    </div>
+
+    <div class="share-options" id="shareOptions">
+      <p>シェア先を選んでね：</p>
+      <button onclick="shareTo('line')">LINE</button>
+      <button onclick="shareTo('x')">X</button>
+      <button onclick="nativeShare()">共有ボタン</button>
+    </div>
+
+    <img src="dog.png" class="animal dog">
+    <img src="cat.png" class="animal cat">
+  </div>
+
+  <script>
+    function showShareOptions() {
+      document.getElementById("shareOptions").style.display = "block";
+    }
+
+    function shareTo(platform) {
+      const text = "♡推しプロフィールメーカー♡で作ったよ！";
+      const url = location.href;
+
+      if (platform === 'line') {
+        window.open(`https://social-plugins.line.me/lineit/share?url=${encodeURIComponent(url)}`, '_blank');
+      } else if (platform === 'x') {
+        window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}&url=${encodeURIComponent(url)}`, '_blank');
+      }
+    }
+
+    function nativeShare() {
+      if (navigator.share) {
+        navigator.share({
+          title: "♡推しプロフィールメーカー♡",
+          text: "♡推しプロフィールメーカー♡で作ったよ！",
+          url: location.href
+        }).catch((err) => console.log("シェアキャンセル", err));
+      } else {
+        alert("お使いのブラウザは共有ボタンに対応していません。");
+      }
+    }
+
+    let profileCount = 1;
+    function addProfile() {
+      if (profileCount >= 3) {
+        alert("最大3人まで追加できます！");
+        return;
+      }
+
+      const container = document.querySelector(".container");
+      const newFields = document.createElement("div");
+      newFields.innerHTML = `
+        <hr>
+        <label>【${profileCount + 1}人目】名前：</label>
+        <input type="text">
+        <label>あだ名：</label>
+        <input type="text">
+        <label>一言：</label>
+        <input type="text">
+        <label>出会い：</label>
+        <input type="text">
+        <label>ここが好き：</label>
+        <textarea rows="2"></textarea>
+        <label>誕生日：</label>
+        <input type="text">
+        <label>好きな食べ物：</label>
+        <input type="text">
+        <label>SNSリンク（任意）：</label>
+        <input type="url">
+      `;
+      container.insertBefore(newFields, document.getElementById("shareOptions"));
+      profileCount++;
+    }
+  </script>
+</body>
+</html>
