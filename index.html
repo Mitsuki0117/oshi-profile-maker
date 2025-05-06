@@ -3,6 +3,17 @@
 <head>
   <meta charset="UTF-8">
   <title>♡推しプロフィールメーカー♡</title>
+  <!-- SEO対策のためのmetaタグ -->
+<meta name="description" content="推しキャラのプロフィールが簡単に作れる♡ふわふわ可愛いプロフィールメーカーです。画像アップロードやSNSシェア機能もあり！">
+<meta name="keywords" content="推しキャラ, プロフィールメーカー, 推しプロフィール, 可愛い, オタ活, ブラウザアプリ, シェア, 推し活, 自己紹介メーカー">
+<meta name="author" content="cottoncloud">
+<meta property="og:title" content="♡推しキャラプロフィールメーカー♡">
+<meta property="og:description" content="推しキャラのプロフィールが簡単に作れる可愛いメーカー。SNSでシェアして推しを紹介しよう！">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://mitsuki0117.github.io/oshi-profile-maker/">
+<meta property="og:image" content="https://mitsuki0117.github.io/oshi-profile-maker/images/preview.jpg"> <!--←あるなら画像URLに変更-->
+<meta name="twitter:card" content="summary_large_image">
+
   <link href="https://fonts.googleapis.com/css2?family=Kiwi+Maru:wght@400;700&display=swap" rel="stylesheet">
   <style>
     body {
@@ -118,28 +129,54 @@
     textarea {
   resize: none; /* リサイズ禁止（右下の点々消える） */
  }
- @media screen and (max-width: 600px) {
+ @media screen and (max-width: 768px) {
   .container {
-    margin: 20px 10px;
-    padding: 15px;
+    max-width: 95%;
+    margin: 20px auto;
+    padding: 20px;
   }
 
-  .title-cloud {
-    font-size: 20px;
-    padding: 15px;
+    .title {
+      font-size: 24px;
+      padding: 10px;
+    }
+
+    .profile-container {
+      width: 90%;
+      margin: 0 auto;
+      font-size: 14px;
+    }
+
+    .share-buttons {
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    img.cat,
+    img.dog {
+      width: 60px;
+      height: auto;
+    }
+  }
+  footer {
+    text-align: center;
+    margin-top: 50px;
+    padding: 20px 0;
+    background-color: #fff0f6; /* 淡いピンクで可愛く */
   }
 
-  input[type="text"],
-  input[type="url"],
-  textarea {
-    font-size: 16px;
+  .ad-banner a {
+    display: inline-block;
+    margin: 5px;
   }
 
-  button {
-    font-size: 14px;
-    padding: 8px 12px;
+  .ad-banner img {
+    width: 80px;
+    height: 80px;
+    object-fit: cover;
+    border-radius: 10px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
   }
-}
   </style>
 </head>
 <body>
@@ -169,6 +206,7 @@
     <div style="margin-top: 15px; text-align: center;">
       <button onclick="showShareOptions()">完成してシェア</button>
       <button onclick="addProfile()">プロフィール追加</button>
+      <button onclick="toggleHowTo()">使い方を見る</button>
     </div>
 
     <div class="share-options" id="shareOptions">
@@ -177,9 +215,56 @@
       <button onclick="shareTo('x')">X</button>
       <button onclick="nativeShare()">共有ボタン</button>
     </div>
-
+    
     <img src="dog.png" class="animal dog">
     <img src="cat.png" class="animal cat">
+  </div>
+  <footer style="text-align: center; padding: 20px; background: #fff0f5; border-top: 2px dashed #f8a5c2; margin-top: 40px;">
+    <p style="font-weight: bold; color: #e06b8b; font-size: 1.1em;">♡ 推し活におすすめグッズ ♡</p>
+    <div style="display: flex; justify-content: center; gap: 12px; flex-wrap: wrap; margin-top: 10px;">
+      
+      <!-- 相合傘キーホルダー -->
+      <a href="https://hb.afl.rakuten.co.jp/ichiba/47cc762a.4f5bdc03.47cc762b.b1296f7f/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Ftiarise%2Faiaigasa-key%2F&link_type=pict&ut=eyJwYWdlIjoiaXRlbSIsInR5cGUiOiJwaWN0Iiwic2l6ZSI6IjgweDgwIiwibmFtIjoxLCJuYW1wIjoicmlnaHQiLCJjb20iOjEsImNvbXAiOiJkb3duIiwicHJpY2UiOjEsImJvciI6MSwiY29sIjoxLCJiYnRuIjoxLCJwcm9kIjowLCJhbXAiOmZhbHNlfQ%3D%3D" 
+         target="_blank" rel="nofollow sponsored noopener">
+        <img src="https://hbb.afl.rakuten.co.jp/hgb/47cc762a.4f5bdc03.47cc762b.b1296f7f/?me_id=1337621&item_id=10000469&pc=https%3A%2F%2Fthumbnail.image.rakuten.co.jp%2F%400_mall%2Ftiarise%2Fcabinet%2Fproducts01%2Fkeyholder%2Fitem1_iuk.jpg%3F_ex%3D80x80&s=80x80&t=pict" 
+             alt="相合傘キーホルダー" 
+             style="border-radius: 12px; box-shadow: 0 4px 8px rgba(0,0,0,0.1);">
+      </a>
+      
+      <!-- 香水キーホルダー -->
+      <a href="https://hb.afl.rakuten.co.jp/ichiba/47cc762a.4f5bdc03.47cc762b.b1296f7f/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Ftiarise%2Fperfume-key%2F&link_type=pict&ut=eyJwYWdlIjoiaXRlbSIsInR5cGUiOiJwaWN0Iiwic2l6ZSI6IjgweDgwIiwibmFtIjoxLCJuYW1wIjoicmlnaHQiLCJjb20iOjEsImNvbXAiOiJkb3duIiwicHJpY2UiOjAsImJvciI6MSwiY29sIjoxLCJiYnRuIjoxLCJwcm9kIjowLCJhbXAiOmZhbHNlfQ%3D%3D" 
+         target="_blank" rel="nofollow sponsored noopener">
+        <img src="https://hbb.afl.rakuten.co.jp/hgb/47cc762a.4f5bdc03.47cc762b.b1296f7f/?me_id=1337621&item_id=10000461&pc=https%3A%2F%2Fthumbnail.image.rakuten.co.jp%2F%400_mall%2Ftiarise%2Fcabinet%2Fproducts01%2Fkeyholder%2Fitem1_pfk.jpg%3F_ex%3D80x80&s=80x80&t=pict" 
+             alt="香水キーホルダー" 
+             style="border-radius: 12px; box-shadow: 0 4px 8px rgba(0,0,0,0.1);">
+      </a>
+      
+      <!-- ぬいポーチ -->
+      <a href="https://hb.afl.rakuten.co.jp/ichiba/47cc762a.4f5bdc03.47cc762b.b1296f7f/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Ftiarise%2Fmyfa-npmini%2F&link_type=pict&ut=eyJwYWdlIjoiaXRlbSIsInR5cGUiOiJwaWN0Iiwic2l6ZSI6IjgweDgwIiwibmFtIjoxLCJuYW1wIjoicmlnaHQiLCJjb20iOjEsImNvbXAiOiJkb3duIiwicHJpY2UiOjAsImJvciI6MSwiY29sIjoxLCJiYnRuIjoxLCJwcm9kIjowLCJhbXAiOmZhbHNlfQ%3D%3D" 
+         target="_blank" rel="nofollow sponsored noopener">
+        <img src="https://hbb.afl.rakuten.co.jp/hgb/47cc762a.4f5bdc03.47cc762b.b1296f7f/?me_id=1337621&item_id=10000517&pc=https%3A%2F%2Fthumbnail.image.rakuten.co.jp%2F%400_mall%2Ftiarise%2Fcabinet%2Fproducts01%2Fbag%2Fitem1_mfnpm.jpg%3F_ex%3D80x80&s=80x80&t=pict" 
+             alt="ぬいポーチ" 
+             style="border-radius: 12px; box-shadow: 0 4px 8px rgba(0,0,0,0.1);">
+      </a>
+      <!-- 名入れキーホルダー -->
+  <a href="https://hb.afl.rakuten.co.jp/ichiba/47cc762a.4f5bdc03.47cc762b.b1296f7f/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Ftiarise%2Foshi-key%2F" target="_blank" rel="nofollow sponsored noopener">
+    <img src="https://hbb.afl.rakuten.co.jp/hgb/47cc762a.4f5bdc03.47cc762b.b1296f7f/?me_id=1337621&item_id=10000139&pc=https%3A%2F%2Fthumbnail.image.rakuten.co.jp%2F%400_mall%2Ftiarise%2Fcabinet%2Fproducts01%2Fkeyholder%2Fitem1_ouk.jpg%3F_ex%3D80x80&s=80x80&t=pict" alt="推しの名入れキーホルダー" />
+  </a>
+
+  <!-- 推し活トート -->
+  <a href="https://hb.afl.rakuten.co.jp/ichiba/47cd1bba.09c028b2.47cd1bbc.e3d2cf97/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Fsaku-saku-shop%2Fbag-rrd001%2F" target="_blank" rel="nofollow sponsored noopener">
+    <img src="https://thumbnail.image.rakuten.co.jp/@0_mall/saku-saku-shop/cabinet/mado_normal/rrd001-mado.jpg?_ex=80x80" alt="推し活トート" />
+  </a>
+</div>
+  
+    </div>
+  </footer>
+  <div id="howto-section" style="display:none;">
+    <div class="title-cloud">使い方</div>
+    <p>1. 画像をアップロードして、名前やあだ名、一言などを入力します。</p>
+    <p>2. 「完成してシェア」ボタンを押すと、シェア先を選ぶことができます。</p>
+    <p>3. 「プロフィール追加」ボタンで最大3人までプロフィールを追加できます。</p>
+    <p>4. 「使い方を見る」ボタンでこの説明が表示されます。</p>
   </div>
 
   <script>
@@ -240,6 +325,10 @@
       `;
       container.insertBefore(newFields, document.getElementById("shareOptions"));
       profileCount++;
+    }
+    function toggleHowTo() {
+      const section = document.getElementById('howto-section');
+      section.style.display = (section.style.display === 'block') ? 'none' : 'block';
     }
   </script>
 </body>
