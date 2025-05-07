@@ -37,6 +37,7 @@
       opacity: 0.5;
       z-index: 0;
       animation: twinkle 20s linear infinite;
+      pointer-events: none; /* ←追加これだけ！ */
     }
 
     @keyframes twinkle {
@@ -49,7 +50,7 @@
       margin: 40px auto;
       background: #fffafa;
       border-radius: 20px;
-      padding: 20px;
+      padding: 40px 30px;
       position: relative;
       box-shadow: 0 0 15px rgba(0,0,0,0.1);
       z-index: 1;
@@ -67,6 +68,19 @@
       font-weight: bold;
       position: relative;
     }
+    .custom-file-upload {
+  display: inline-block;
+  padding: 8px 12px;
+  background-color: #ffc9e3;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
+.custom-file-upload input[type="file"] {
+  display: none;
+}
 
     label {
       display: block;
@@ -76,15 +90,16 @@
     }
 
     input[type="text"],
-    input[type="url"],
-    textarea {
-      width: 100%;
-      padding: 8px;
-      border-radius: 10px;
-      border: 1px solid #ddd;
-      box-sizing: border-box;
-      font-size: 14px;
-    }
+input[type="url"],
+textarea {
+  width: 100%;
+  padding: 10px; /* ← 上下余裕を持たせる */
+  border-radius: 10px;
+  border: 1px solid #ddd;
+  box-sizing: border-box;
+  font-size: 14px;
+  line-height: 1.6; /* ← 追加！ */
+}
 
     input[type="file"] {
       margin-bottom: 10px;
@@ -152,56 +167,97 @@
       gap: 10px;
     }
 
+   #saveTarget {
+  padding: 20px;
+  background-color: #ffffff;
+  border-radius: 10px;
+  max-width: 400px;
+  margin: 0 auto;
+}
+
+input[type="text"],
+  input[type="url"],
+  textarea {
+    padding: 10px;       /* ← 修正：8pxより広く */
+    line-height: 1.6;    /* ← 修正：1.4 → 1.6 */
+    box-sizing: border-box;
+    width: 100%;
+    margin-bottom: 10px;
+}
+
     img.cat,
     img.dog {
       width: 60px;
       height: auto;
     }
   }
-  footer {
-    text-align: center;
-    margin-top: 50px;
-    padding: 20px 0;
-    background-color: #fff0f6; /* 淡いピンクで可愛く */
-  }
+  .ad-footer {
+  text-align: center;
+  padding: 20px;
+  background: #fff0f5;
+  border-top: 2px dashed #f8a5c2;
+  margin-top: 40px;
+}
 
-  .ad-banner a {
-    display: inline-block;
-    margin: 5px;
-  }
+.ad-title {
+  font-weight: bold;
+  color: #e06b8b;
+  font-size: 1.1em;
+  margin-bottom: 10px;
+}
 
-  .ad-banner img {
-    width: 80px;
-    height: 80px;
-    object-fit: cover;
-    border-radius: 10px;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-  }
+.ad-banner {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.ad-banner a img {
+  border-radius: 12px;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+/* 保存時のみ反映させたいCSS */
+#profileDisplayArea.saving-style {
+  padding: 40px 30px;
+  background: #fffafa;
+  border-radius: 20px;
+  box-shadow: 0 0 20px rgba(0,0,0,0.1);
+  width: 100%;
+  max-width: 500px;
+  margin: 0 auto;
+}
+#profileDisplayArea.saving-style * {
+  font-family: sans-serif !important;
+  line-height: 1.6 !important;
+}
   </style>
 </head>
 <body>
 
   <div class="container">
     <div class="title-cloud">♡推しプロフィールメーカー♡</div>
-
-    <label>画像アップロード：</label>
-    <input type="file" accept="image/*">
-    <label>名前：</label>
-    <input type="text">
-    <label>あだ名：</label>
-    <input type="text">
-    <label>一言：</label>
-    <input type="text">
-    <label>出会い：</label>
-    <input type="text">
-    <label>ここが好き：</label>
-    <textarea rows="2"></textarea>
-    <label>誕生日：</label>
-    <input type="text">
-    <label>好きな食べ物：</label>
-    <input type="text">
-    <label>SNSリンク（任意）：</label>
-    <input type="url">
+    <div id="profileDisplayArea">
+      <!-- ここにプロフィールが出力されてる -->
+      <div id="profileDisplayArea">
+        <div class="profile-block">
+          <label class="custom-file-upload">
+            画像アップロード
+            <input type="file" accept="image/*" onchange="previewImage(this)">
+          </label>
+          <img class="preview" src="" style="width: 100%; max-width: 200px; display: none; margin-top: 10px;">
+          <img class="preview" src="" style="width: 100%; max-width: 200px; display: none; margin-top: 10px;">
+          <label>名前：</label><input type="text">
+          <label>あだ名：</label><input type="text">
+          <label>一言：</label><input type="text">
+          <label>出会い：</label><input type="text">
+          <label>ここが好き：</label><textarea rows="2"></textarea>
+          <label>誕生日：</label><input type="text">
+          <label>好きな食べ物：</label><input type="text">
+          <label>SNSリンク（任意）：</label><input type="url">
+        </div>
+      </div>
+    </div>
 
     <div style="margin-top: 15px; text-align: center;">
       <button onclick="showShareOptions()">完成してシェア</button>
@@ -214,21 +270,19 @@
       <button onclick="shareTo('line')">LINE</button>
       <button onclick="shareTo('x')">X</button>
       <button onclick="nativeShare()">共有ボタン</button>
+      <button onclick="saveAsImage()">画像保存</button>
     </div>
-    
     <img src="dog.png" class="animal dog">
     <img src="cat.png" class="animal cat">
   </div>
-  <footer style="text-align: center; padding: 20px; background: #fff0f5; border-top: 2px dashed #f8a5c2; margin-top: 40px;">
-    <p style="font-weight: bold; color: #e06b8b; font-size: 1.1em;">♡ 推し活におすすめグッズ ♡</p>
-    <div style="display: flex; justify-content: center; gap: 12px; flex-wrap: wrap; margin-top: 10px;">
-      
+  <footer class="ad-footer">
+    <p class="ad-title">♡ 推し活におすすめグッズ ♡</p>
+    <div class="ad-banner">
       <!-- 相合傘キーホルダー -->
-      <a href="https://hb.afl.rakuten.co.jp/ichiba/47cc762a.4f5bdc03.47cc762b.b1296f7f/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Ftiarise%2Faiaigasa-key%2F&link_type=pict&ut=eyJwYWdlIjoiaXRlbSIsInR5cGUiOiJwaWN0Iiwic2l6ZSI6IjgweDgwIiwibmFtIjoxLCJuYW1wIjoicmlnaHQiLCJjb20iOjEsImNvbXAiOiJkb3duIiwicHJpY2UiOjEsImJvciI6MSwiY29sIjoxLCJiYnRuIjoxLCJwcm9kIjowLCJhbXAiOmZhbHNlfQ%3D%3D" 
+      <a href="https://hb.afl.rakuten.co.jp/ichiba/47cc762a.4f5bdc03.47cc762b.b1296f7f/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Ftiarise%2Faiaigasa-key%2F&link_type=pict&ut=..." 
          target="_blank" rel="nofollow sponsored noopener">
         <img src="https://hbb.afl.rakuten.co.jp/hgb/47cc762a.4f5bdc03.47cc762b.b1296f7f/?me_id=1337621&item_id=10000469&pc=https%3A%2F%2Fthumbnail.image.rakuten.co.jp%2F%400_mall%2Ftiarise%2Fcabinet%2Fproducts01%2Fkeyholder%2Fitem1_iuk.jpg%3F_ex%3D80x80&s=80x80&t=pict" 
-             alt="相合傘キーホルダー" 
-             style="border-radius: 12px; box-shadow: 0 4px 8px rgba(0,0,0,0.1);">
+             alt="相合傘キーホルダー">
       </a>
       
       <!-- 香水キーホルダー -->
@@ -252,11 +306,10 @@
   </a>
 
   <!-- 推し活トート -->
-  <a href="https://hb.afl.rakuten.co.jp/ichiba/47cd1bba.09c028b2.47cd1bbc.e3d2cf97/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Fsaku-saku-shop%2Fbag-rrd001%2F" target="_blank" rel="nofollow sponsored noopener">
-    <img src="https://thumbnail.image.rakuten.co.jp/@0_mall/saku-saku-shop/cabinet/mado_normal/rrd001-mado.jpg?_ex=80x80" alt="推し活トート" />
-  </a>
+  <a href="https://hb.afl.rakuten.co.jp/ichiba/47cd1bba.09c028b2.47cd1bbc.e3d2cf97/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Fsaku-saku-shop%2Fbag-rrd001%2F&link_type=pict&ut=eyJwYWdlIjoiaXRlbSIsInR5cGUiOiJwaWN0Iiwic2l6ZSI6IjgweDgwIiwibmFtIjoxLCJuYW1wIjoicmlnaHQiLCJjb20iOjEsImNvbXAiOiJkb3duIiwicHJpY2UiOjEsImJvciI6MSwiY29sIjoxLCJiYnRuIjoxLCJwcm9kIjowLCJhbXAiOmZhbHNlfQ%3D%3D" target="_blank" rel="nofollow sponsored noopener" style="word-wrap:break-word;">
+    <img src="https://hbb.afl.rakuten.co.jp/hgb/47cd1bba.09c028b2.47cd1bbc.e3d2cf97/?me_id=1281585&item_id=10001273&pc=https%3A%2F%2Fthumbnail.image.rakuten.co.jp%2F%400_mall%2Fsaku-saku-shop%2Fcabinet%2Fmado_normal%2Frrd001-mado.jpg%3F_ex%3D80x80&s=80x80&t=pict" border="0" style="margin:2px" alt="" title=""></a>
 </div>
-  
+</footer>
     </div>
   </footer>
   <div id="howto-section" style="display:none;">
@@ -267,6 +320,29 @@
     <p>4. 「使い方を見る」ボタンでこの説明が表示されます。</p>
   </div>
 
+  
+  <script>
+    function previewImage(input) {
+  const file = input.files[0];
+  if (!file) return;
+
+  const reader = new FileReader();
+  reader.onload = function (e) {
+    const container = input.closest('.profile-block');
+    const preview = container.querySelector('.preview');
+    if (preview) {
+      preview.src = e.target.result;
+      preview.style.display = 'block';
+    }
+  };
+  reader.readAsDataURL(file);
+}
+    </script>
+    <script>
+    setTimeout(() => {
+      link.click();
+      URL.revokeObjectURL(link.href);
+    }, 100);</script>
   <script>
     function showShareOptions() {
       document.getElementById("shareOptions").style.display = "block";
@@ -296,40 +372,79 @@
     }
 
     let profileCount = 1;
-    function addProfile() {
-      if (profileCount >= 3) {
-        alert("最大3人まで追加できます！");
-        return;
-      }
 
-      const container = document.querySelector(".container");
-      const newFields = document.createElement("div");
-      newFields.innerHTML = `
-        <hr>
-        <label>【${profileCount + 1}人目】名前：</label>
-        <input type="text">
-        <label>あだ名：</label>
-        <input type="text">
-        <label>一言：</label>
-        <input type="text">
-        <label>出会い：</label>
-        <input type="text">
-        <label>ここが好き：</label>
-        <textarea rows="2"></textarea>
-        <label>誕生日：</label>
-        <input type="text">
-        <label>好きな食べ物：</label>
-        <input type="text">
-        <label>SNSリンク（任意）：</label>
-        <input type="url">
-      `;
-      container.insertBefore(newFields, document.getElementById("shareOptions"));
-      profileCount++;
-    }
+function addProfile() {
+  if (profileCount >= 3) {
+    alert("最大3人まで追加できます！");
+    return;
+  }
+
+  const displayArea = document.getElementById("profileDisplayArea"); // ここ変更！
+  const newFields = document.createElement("div");
+  newFields.classList.add("profile-block"); // スタイル調整しやすい用にclass追加
+  newFields.innerHTML = `
+      <hr>
+  <label>【${profileCount + 1}人目】</label>
+  <div class="profile">
+    <label class="custom-file-upload">
+      画像アップロード
+      <input type="file" accept="image/*" onchange="previewImage(this)">
+    </label>
+    <img class="preview" src="">
+  </div>
+    <label>名前：</label>
+    <input type="text">
+    <label>あだ名：</label>
+    <input type="text">
+    <label>一言：</label>
+    <input type="text">
+    <label>出会い：</label>
+    <input type="text">
+    <label>ここが好き：</label>
+    <textarea rows="2"></textarea>
+    <label>誕生日：</label>
+    <input type="text">
+    <label>好きな食べ物：</label>
+    <input type="text">
+    <label>SNSリンク（任意）：</label>
+    <input type="url">
+  `;
+
+  displayArea.appendChild(newFields); // ここを container → displayArea に変更！
+  profileCount++;
+}
     function toggleHowTo() {
       const section = document.getElementById('howto-section');
       section.style.display = (section.style.display === 'block') ? 'none' : 'block';
     }
   </script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+
+  <script>
+    function saveAsImage() {
+      const element = document.getElementById('profileDisplayArea');
+      if (!element) {
+        alert('プロフィール表示エリアが見つかりません。');
+        return;
+      }
+  
+      // 一時的に「保存用CSSクラス」を追加
+      element.classList.add('saving-style');
+  
+      // 少し待ってからhtml2canvasでキャプチャ（CSS反映タイミングを確保）
+      setTimeout(() => {
+        html2canvas(element).then(canvas => {
+          const link = document.createElement('a');
+          link.href = canvas.toDataURL('image/png');
+          link.download = 'profile.png';
+          link.click();
+        }).catch(err => {
+          alert('画像の生成に失敗しました：' + err);
+        }).finally(() => {
+          // 保存後にクラスを元に戻す
+          element.classList.remove('saving-style');
+        });
+      }, 100); // 100ms待機
+    }
+  </script>
 </body>
-</html>
