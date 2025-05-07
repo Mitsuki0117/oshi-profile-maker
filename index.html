@@ -90,16 +90,15 @@
     }
 
     input[type="text"],
-input[type="url"],
-textarea {
-  width: 100%;
-  padding: 10px; /* ← 上下余裕を持たせる */
-  border-radius: 10px;
-  border: 1px solid #ddd;
-  box-sizing: border-box;
-  font-size: 14px;
-  line-height: 1.6; /* ← 追加！ */
-}
+    input[type="url"],
+    textarea {
+      width: 100%;
+      padding: 8px;
+      border-radius: 10px;
+      border: 1px solid #ddd;
+      box-sizing: border-box;
+      font-size: 14px;
+    }
 
     input[type="file"] {
       margin-bottom: 10px;
@@ -176,13 +175,13 @@ textarea {
 }
 
 input[type="text"],
-  input[type="url"],
-  textarea {
-    padding: 10px;       /* ← 修正：8pxより広く */
-    line-height: 1.6;    /* ← 修正：1.4 → 1.6 */
-    box-sizing: border-box;
-    width: 100%;
-    margin-bottom: 10px;
+input[type="url"],
+textarea {
+  padding: 6px 8px;
+  line-height: 1.4;
+  box-sizing: border-box;
+  width: 100%;
+  margin-bottom: 10px;
 }
 
     img.cat,
@@ -227,10 +226,6 @@ input[type="text"],
   max-width: 500px;
   margin: 0 auto;
 }
-#profileDisplayArea.saving-style * {
-  font-family: sans-serif !important;
-  line-height: 1.6 !important;
-}
   </style>
 </head>
 <body>
@@ -271,6 +266,7 @@ input[type="text"],
       <button onclick="shareTo('x')">X</button>
       <button onclick="nativeShare()">共有ボタン</button>
       <button onclick="saveAsImage()">画像保存</button>
+      <p class="note">※スマホの方は画像を長押しして保存してください</p>
     </div>
     <img src="dog.png" class="animal dog">
     <img src="cat.png" class="animal cat">
@@ -383,15 +379,13 @@ function addProfile() {
   const newFields = document.createElement("div");
   newFields.classList.add("profile-block"); // スタイル調整しやすい用にclass追加
   newFields.innerHTML = `
-      <hr>
-  <label>【${profileCount + 1}人目】</label>
-  <div class="profile">
-    <label class="custom-file-upload">
-      画像アップロード
+    <hr>
+    <label>【${profileCount + 1}人目】</label>
+    <div class="profile">
+      <label>画像アップロード：</label>
       <input type="file" accept="image/*" onchange="previewImage(this)">
-    </label>
-    <img class="preview" src="">
-  </div>
+      <img class="preview" src="">
+    </div>
     <label>名前：</label>
     <input type="text">
     <label>あだ名：</label>
@@ -434,10 +428,17 @@ function addProfile() {
       // 少し待ってからhtml2canvasでキャプチャ（CSS反映タイミングを確保）
       setTimeout(() => {
         html2canvas(element).then(canvas => {
-          const link = document.createElement('a');
-          link.href = canvas.toDataURL('image/png');
-          link.download = 'profile.png';
-          link.click();
+          canvas.toBlob(function(blob) {
+            if (blob) {
+              const link = document.createElement('a');
+              link.href = URL.createObjectURL(blob);
+              link.download = 'profile.png';
+              link.click();
+              URL.revokeObjectURL(link.href);
+            } else {
+              alert('画像の保存に失敗しました。');
+            }
+          }, 'image/png');
         }).catch(err => {
           alert('画像の生成に失敗しました：' + err);
         }).finally(() => {
@@ -446,5 +447,17 @@ function addProfile() {
         });
       }, 100); // 100ms待機
     }
+    // canvasができた後
+const img = document.createElement('img');
+img.src = dataURL;
+img.alt = "保存用画像";
+img.style = "max-width: 100%; margin-top: 20px;";
+document.body.appendChild(img);
+
+// 補足メッセージ
+const note = document.createElement('p');
+note.textContent = "※スマホの方はこの画像を長押しで保存してね";
+note.style = "color: #666; font-size: 0.9em;";
+document.body.appendChild(note);
   </script>
 </body>
