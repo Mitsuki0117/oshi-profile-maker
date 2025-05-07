@@ -426,51 +426,153 @@ function addProfile() {
       section.style.display = (section.style.display === 'block') ? 'none' : 'block';
     }
   </script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+ <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 
-  <script>
-    function saveAsImage() {
-  const element = document.getElementById('profileDisplayArea');
-  if (!element) {
-    alert('プロフィール表示エリアが見つかりません。');
-    return;
-  }
-
-  element.classList.add('saving-style');
-
-  setTimeout(() => {
-    html2canvas(element, {
-      useCORS: true,
-      allowTaint: true
-    }).then(canvas => {
-      const dataURL = canvas.toDataURL('image/png');
-
-      // PC用ダウンロード（できる人はできる）
-      const link = document.createElement('a');
-      link.href = dataURL;
-      link.download = 'profile.png';
-      link.click();
-
-      // スマホ用に画像を表示して長押し保存させる
-      const previewContainer = document.getElementById('imagePreviewContainer');
-      previewContainer.innerHTML = ''; // 前の画像消す
-      const img = document.createElement('img');
-      img.src = dataURL;
-      img.alt = '保存用プロフィール画像';
-      img.style = 'max-width: 100%; margin-top: 20px; border: 1px solid #ccc;';
-      previewContainer.appendChild(img);
-
-      const note = document.createElement('p');
-      note.textContent = '※スマホの方はこの画像を長押しして保存してね';
-      note.style = 'font-size: 0.9em; color: #666;';
-      previewContainer.appendChild(note);
-
-    }).catch(err => {
-      alert('画像の生成に失敗しました：' + err);
-    }).finally(() => {
-      element.classList.remove('saving-style');
-    });
-  }, 100);
-}
-  </script>
+ <script>
+   function saveAsImage() {
+     const element = document.getElementById('profileDisplayArea');
+     if (!element) {
+       alert('プロフィール表示エリアが見つかりません。');
+       return;
+     }
+ 
+     element.classList.add('saving-style');
+ 
+     setTimeout(() => {
+       html2canvas(element, {
+         useCORS: true,
+         allowTaint: true
+       }).then(canvas => {
+         const dataURL = canvas.toDataURL('image/png');
+ 
+         // PC用ダウンロード
+         const link = document.createElement('a');
+         link.href = dataURL;
+         link.download = 'profile.png';
+         link.click();
+ 
+         // スマホ用に画像表示
+         const previewContainer = document.getElementById('imagePreviewContainer');
+         previewContainer.innerHTML = ''; // 前の画像をクリア
+         const img = document.createElement('img');
+         img.src = dataURL;
+         img.alt = '保存用プロフィール画像';
+         img.style = 'max-width: 100%; margin-top: 20px; border: 1px solid #ccc;';
+         previewContainer.appendChild(img);
+ 
+         const note = document.createElement('p');
+         note.textContent = '※スマホの方はこの画像を長押しして保存してね';
+         note.style = 'font-size: 0.9em; color: #666;';
+         previewContainer.appendChild(note);
+ 
+         // imgurにアップロード（リンク表示用）
+         uploadToImgur(dataURL);
+ 
+       }).catch(err => {
+         alert('画像の生成に失敗しました：' + err);
+       }).finally(() => {
+         element.classList.remove('saving-style');
+       });
+     }, 100);
+   }
+ 
+   function uploadToImgur(dataURL) {
+     const base64Image = dataURL.split(',')[1];
+     const clientId = 'bb8064419b2b7be';
+ 
+     fetch('https://api.imgur.com/3/image', {
+       method: 'POST',
+       headers: {
+         Authorization: 'Client-ID ' + clientId,
+         'Content-Type': 'application/json'
+       },
+       body: JSON.stringify({
+         image: base64Image,
+         type: 'base64'
+       })
+     })
+     .then(response => response.json())
+     .then(data => {
+       if (data.success) {
+         const imgurPageUrl = 'https://imgur.com/' + data.data.id;
+ 
+         const linkNote = document.createElement('p');
+         linkNote.innerHTML = `シェア用リンク：<a href="${imgurPageUrl}" target="_blank">${imgurPageUrl}</a>`;
+         linkNote.style = 'margin-top: 10px; font-size: 0.9em; color: #333;';
+         document.getElementById('imagePreviewContainer').appendChild(linkNote);
+       } else {
+         alert('画像のアップロードに失敗しました。');
+       }
+     })
+     .catch(err => {
+       alert('imgurアップロードエラー：' + err);
+     });
+   }
+ 
+   function shareTo(platform) {
+     const element = document.getElementById('profileDisplayArea');
+     if (!element) {
+       alert('プロフィール表示エリアが見つかりません。');
+       return;
+     }
+ 
+     element.classList.add('saving-style');
+ 
+     setTimeout(() => {
+       html2canvas(element, {
+         useCORS: true,
+         allowTaint: true
+       }).then(canvas => {
+         const dataURL = canvas.toDataURL('image/png');
+         const imageBlob = dataURItoBlob(dataURL);
+ 
+         const formData = new FormData();
+         formData.append('image', imageBlob);
+ 
+         fetch('https://api.imgur.com/3/image', {
+           method: 'POST',
+           headers: {
+             Authorization: 'Client-ID bb8064419b2b7be'
+           },
+           body: formData
+         })
+         .then(response => response.json())
+         .then(data => {
+           const imageUrl = data.data.link;
+           const text = encodeURIComponent('私の推しキャラプロフィールを見てね！');
+           let shareUrl = '';
+ 
+           if (platform === 'line') {
+             shareUrl = `https://line.me/R/msg/text/?${text}%0A${imageUrl}`;
+           } else if (platform === 'x') {
+             shareUrl = `https://twitter.com/intent/tweet?text=${text}&url=${imageUrl}`;
+           }
+ 
+           window.open(shareUrl, '_blank');
+         })
+         .catch(error => {
+           alert('画像のアップロードに失敗しました：' + error);
+         })
+         .finally(() => {
+           element.classList.remove('saving-style');
+         });
+ 
+       }).catch(err => {
+         alert('画像の生成に失敗しました：' + err);
+       });
+     }, 100);
+   }
+ 
+   // Base64→Blob変換関数
+   function dataURItoBlob(dataURI) {
+     const byteString = atob(dataURI.split(',')[1]);
+     const mimeString = dataURI.split(',')[0].split(':')[1].split(';')[0];
+     const ab = new ArrayBuffer(byteString.length);
+     const ia = new Uint8Array(ab);
+     for (let i = 0; i < byteString.length; i++) {
+       ia[i] = byteString.charCodeAt(i);
+     }
+     return new Blob([ab], { type: mimeString });
+   }
+ </script>
 </body>
