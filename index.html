@@ -265,6 +265,7 @@ textarea {
       <button onclick="shareTo('line')">LINE</button>
       <button onclick="shareTo('x')">X</button>
       <button onclick="nativeShare()">共有ボタン</button>
+      <div id="imagePreviewContainer"></div>
       <button onclick="saveAsImage()">画像保存</button>
       <p class="note">※スマホの方は画像を長押しして保存してください</p>
     </div>
@@ -416,48 +417,47 @@ function addProfile() {
 
   <script>
     function saveAsImage() {
-      const element = document.getElementById('profileDisplayArea');
-      if (!element) {
-        alert('プロフィール表示エリアが見つかりません。');
-        return;
-      }
-  
-      // 一時的に「保存用CSSクラス」を追加
-      element.classList.add('saving-style');
-  
-      // 少し待ってからhtml2canvasでキャプチャ（CSS反映タイミングを確保）
-      setTimeout(() => {
-        html2canvas(element).then(canvas => {
-          canvas.toBlob(function(blob) {
-            if (blob) {
-              const link = document.createElement('a');
-              link.href = URL.createObjectURL(blob);
-              link.download = 'profile.png';
-              link.click();
-              URL.revokeObjectURL(link.href);
-            } else {
-              alert('画像の保存に失敗しました。');
-            }
-          }, 'image/png');
-        }).catch(err => {
-          alert('画像の生成に失敗しました：' + err);
-        }).finally(() => {
-          // 保存後にクラスを元に戻す
-          element.classList.remove('saving-style');
-        });
-      }, 100); // 100ms待機
-    }
-    // canvasができた後
-const img = document.createElement('img');
-img.src = dataURL;
-img.alt = "保存用画像";
-img.style = "max-width: 100%; margin-top: 20px;";
-document.body.appendChild(img);
+  const element = document.getElementById('profileDisplayArea');
+  if (!element) {
+    alert('プロフィール表示エリアが見つかりません。');
+    return;
+  }
 
-// 補足メッセージ
-const note = document.createElement('p');
-note.textContent = "※スマホの方はこの画像を長押しで保存してね";
-note.style = "color: #666; font-size: 0.9em;";
-document.body.appendChild(note);
+  element.classList.add('saving-style');
+
+  setTimeout(() => {
+    html2canvas(element, {
+      useCORS: true,
+      allowTaint: true
+    }).then(canvas => {
+      const dataURL = canvas.toDataURL('image/png');
+
+      // PC用ダウンロード（できる人はできる）
+      const link = document.createElement('a');
+      link.href = dataURL;
+      link.download = 'profile.png';
+      link.click();
+
+      // スマホ用に画像を表示して長押し保存させる
+      const previewContainer = document.getElementById('imagePreviewContainer');
+      previewContainer.innerHTML = ''; // 前の画像消す
+      const img = document.createElement('img');
+      img.src = dataURL;
+      img.alt = '保存用プロフィール画像';
+      img.style = 'max-width: 100%; margin-top: 20px; border: 1px solid #ccc;';
+      previewContainer.appendChild(img);
+
+      const note = document.createElement('p');
+      note.textContent = '※スマホの方はこの画像を長押しして保存してね';
+      note.style = 'font-size: 0.9em; color: #666;';
+      previewContainer.appendChild(note);
+
+    }).catch(err => {
+      alert('画像の生成に失敗しました：' + err);
+    }).finally(() => {
+      element.classList.remove('saving-style');
+    });
+  }, 100);
+}
   </script>
 </body>
