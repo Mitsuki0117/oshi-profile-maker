@@ -265,8 +265,8 @@ textarea {
       <button onclick="shareTo('line')">LINE</button>
       <button onclick="shareTo('x')">X</button>
       <button onclick="nativeShare()">共有ボタン</button>
-      <div id="imagePreviewContainer"></div>
       <button onclick="saveAsImage()">画像保存</button>
+      <div id="imagePreviewContainer"></div>
     </div>
     <img src="dog.png" class="animal dog">
     <img src="cat.png" class="animal cat">
@@ -380,12 +380,14 @@ function addProfile() {
   newFields.classList.add("profile-block"); // スタイル調整しやすい用にclass追加
   newFields.innerHTML = `
     <hr>
-    <label>【${profileCount + 1}人目】</label>
-    <div class="profile">
-      <label>画像アップロード：</label>
+  <label>【${profileCount + 1}人目】</label>
+  <div class="profile">
+    <label class="custom-file-upload">
+      画像アップロード
       <input type="file" accept="image/*" onchange="previewImage(this)">
-      <img class="preview" src="">
-    </div>
+    </label>
+    <img class="preview" src="">
+  </div>
     <label>名前：</label>
     <input type="text">
     <label>あだ名：</label>
@@ -460,3 +462,4 @@ function addProfile() {
 }
   </script>
 </body>
+
