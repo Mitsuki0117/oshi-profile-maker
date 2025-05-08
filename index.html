@@ -3,28 +3,23 @@
 <head>
   <meta charset="UTF-8">
   <title>♡推しプロフィールメーカー♡</title>
-  <!-- SEO対策のためのmetaタグ -->
+  <!-- SEO用 -->
 <meta name="description" content="推しキャラのプロフィールが簡単に作れる♡ふわふわ可愛いプロフィールメーカーです。画像アップロードやSNSシェア機能もあり！">
 <meta name="keywords" content="推しキャラ, プロフィールメーカー, 推しプロフィール, 可愛い, オタ活, ブラウザアプリ, シェア, 推し活, 自己紹介メーカー">
 <meta name="author" content="cottoncloud">
-<meta property="og:title" content="♡推しキャラプロフィールメーカー♡">
-<meta property="og:description" content="推しキャラのプロフィールが簡単に作れる可愛いメーカー。SNSでシェアして推しを紹介しよう！">
+
+<!-- OGP（SNS共通） -->
+<meta property="og:title" content="♡推しプロフィールメーカー♡">
+<meta property="og:description" content="あなたの推しをかわいく紹介しちゃおう！画像保存＆シェアもできるプロフィールメーカー">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://mofu-mitsu.github.io/oshi-profile-maker/">
-<meta property="og:image" content="https://mofu-mitsu.github.io/oshi-profile-maker/images/preview.jpg"> <!--←あるなら画像URLに変更-->
-<meta name="twitter:card" content="summary_large_image">
-<!-- OGP基本情報 -->
-<meta property="og:title" content="♡推しプロフィールメーカー♡" />
-<meta property="og:description" content="あなたの推しをかわいく紹介しちゃおう！画像保存＆シェアもできるプロフィールメーカー" />
-<meta property="og:image" content="https://mofu-mitsu.github.io/oshi-profile-maker/ogp.png" />
-<meta property="og:url" content="https://mofu-mitsu.github.io/oshi-profile-maker/" />
-<meta property="og:type" content="website" />
-<!-- Twitter用 -->
-<meta name="twitter:card" content="summary_large_image" />
-<meta name="twitter:title" content="♡推しプロフィールメーカー♡" />
-<meta name="twitter:description" content="あなたの推しをかわいく紹介しちゃおう！画像保存＆シェアもできるプロフィールメーカー" />
-<meta name="twitter:image" content="https://mofu-mitsu.github.io/oshi-profile-maker/ogp.png" />
+<meta property="og:image" content="https://mofu-mitsu.github.io/oshi-profile-maker/ogp.png">
 
+<!-- Twitterカード用 -->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="♡推しプロフィールメーカー♡">
+<meta name="twitter:description" content="あなたの推しをかわいく紹介しちゃおう！画像保存＆シェアもできるプロフィールメーカー">
+<meta name="twitter:image" content="https://mofu-mitsu.github.io/oshi-profile-maker/ogp.png">
 <link rel="icon" type="image/x-icon" href="favicon.ico">
   <link href="https://fonts.googleapis.com/css2?family=Kiwi+Maru:wght@400;700&display=swap" rel="stylesheet">
   <style>
@@ -51,6 +46,19 @@
       animation: twinkle 20s linear infinite;
       pointer-events: none; /* ←追加これだけ！ */
     }
+    /* どこかのstyle.cssやhead内に入れてね */
+.loader {
+  border: 6px solid #f3f3f3;
+  border-top: 6px solid #f8accf;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  animation: spin 1s linear infinite;
+}
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
 
     @keyframes twinkle {
       0% { background-position: 0 0; }
@@ -452,6 +460,30 @@ function addProfile() {
  
      element.classList.add('saving-style');
  
+    // ★ ローディング表示（前のやつを流用）
+  const previewContainer = document.getElementById('imagePreviewContainer');
+  previewContainer.innerHTML = '';
+
+  const existingLoader = document.getElementById('loadingWrapper');
+  if (existingLoader) existingLoader.remove();
+
+  const loaderWrapper = document.createElement('div');
+  loaderWrapper.id = 'loadingWrapper';
+  loaderWrapper.style = 'display: flex; flex-direction: column; align-items: center; margin-top: 20px;';
+
+  const loader = document.createElement('div');
+  loader.className = 'loader';
+
+  const loaderText = document.createElement('p');
+  loaderText.textContent = '頑張って画像を準備中…';
+  loaderText.style = 'margin-top: 10px; font-size: 0.95em; color: #666;';
+
+  loaderWrapper.appendChild(loader);
+  loaderWrapper.appendChild(loaderText);
+  previewContainer.appendChild(loaderWrapper);
+
+  // ★ ローディング表示ここまで
+
      setTimeout(() => {
        html2canvas(element, { useCORS: true, allowTaint: true }).then(canvas => {
          const dataURL = canvas.toDataURL('image/png');
@@ -525,6 +557,24 @@ function addProfile() {
        alert('プロフィール表示エリアが見つかりません。');
        return;
      }
+     // ローディング表示を追加
+  const previewContainer = document.getElementById('imagePreviewContainer');
+  previewContainer.innerHTML = ''; // 既存の内容をクリア
+  const loaderWrapper = document.createElement('div');
+  loaderWrapper.id = 'loadingWrapper';
+  loaderWrapper.style = 'display: flex; flex-direction: column; align-items: center; margin-top: 20px;';
+
+  const loader = document.createElement('div');
+  loader.className = 'loader';
+
+  const loaderText = document.createElement('p');
+  loaderText.textContent = 'ローディング中…';
+  loaderText.style = 'margin-top: 10px; font-size: 0.95em; color: #666;';
+
+  loaderWrapper.appendChild(loader);
+  loaderWrapper.appendChild(loaderText);
+  previewContainer.appendChild(loaderWrapper);
+
  
      element.classList.add('saving-style');
 
@@ -555,8 +605,8 @@ function addProfile() {
           shareUrl = `https://twitter.com/intent/tweet?text=${text}&url=${imageUrl}%0A${fullUrl}`;
         }
 
-        // シェアボタンを表示して、ユーザー操作で開かせる
-        const previewContainer = document.getElementById('imagePreviewContainer');
+          // シェアボタンを表示して、ユーザー操作で開かせる
+          previewContainer.innerHTML = ''; // ローディングを消す
         const shareBtn = document.createElement('button');
         shareBtn.textContent = platform === 'line' ? 'LINEでシェアする' : 'Xでシェアする';
         shareBtn.style = 'margin-top: 15px; padding: 10px 20px; font-size: 1em;';
@@ -568,14 +618,21 @@ function addProfile() {
       })
       .catch(error => {
         alert('画像のアップロードに失敗しました：' + error);
+        previewContainer.innerHTML = ''; // ローディングを消す
       })
       .finally(() => {
         element.classList.remove('saving-style');
+        const loaderWrapper = document.getElementById('loadingWrapper');
+        if (loaderWrapper) loaderWrapper.remove(); // ローディングを削除
       });
     }).catch(err => {
       alert('画像の生成に失敗しました：' + err);
+      previewContainer.innerHTML = ''; // ローディングを消す
+      const loaderWrapper = document.getElementById('loadingWrapper');
+      if (loaderWrapper) loaderWrapper.remove(); // ローディングを削除
     });
   }, 100);
+
 }
  
    function dataURItoBlob(dataURI) {
@@ -590,3 +647,4 @@ function addProfile() {
    }
  </script>
 </body>
+
