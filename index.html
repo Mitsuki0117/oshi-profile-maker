@@ -119,16 +119,16 @@
     }
 
     input[type="text"],
-    input[type="url"],
-    textarea {
-      width: 100%;
-      padding: 8px;
-      border-radius: 10px;
-      border: 1px solid #ddd;
-      box-sizing: border-box;
-      font-size: 14px;
-    }
-
+input[type="url"],
+textarea {
+  width: 100%;
+  padding: 10px; /* 上下の余白を増やす */
+  border-radius: 10px;
+  border: 1px solid #ddd;
+  box-sizing: border-box;
+  font-size: 14px;
+  line-height: 1.5; /* 行間を調整 */
+}
     input[type="file"] {
       margin-bottom: 10px;
     }
@@ -170,8 +170,9 @@
       margin: 5px;
     }
     textarea {
-  resize: none; /* リサイズ禁止（右下の点々消える） */
- }
+  resize: none; /* リサイズ禁止 */
+  min-height: 50px; /* 最低高さを設定 */
+}
  @media screen and (max-width: 768px) {
   .container {
     max-width: 95%;
@@ -650,3 +651,4 @@ function addProfile() {
    }
  </script>
 </body>
+
