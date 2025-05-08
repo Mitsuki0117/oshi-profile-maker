@@ -527,47 +527,56 @@ function addProfile() {
      }
  
      element.classList.add('saving-style');
- 
-     setTimeout(() => {
-       html2canvas(element, { useCORS: true, allowTaint: true }).then(canvas => {
-         const dataURL = canvas.toDataURL('image/png');
-         const imageBlob = dataURItoBlob(dataURL);
-         const formData = new FormData();
-         formData.append('image', imageBlob);
- 
-         fetch('https://api.imgur.com/3/image', {
-           method: 'POST',
-           headers: {
-             Authorization: 'Client-ID bb8064419b2b7be'
-           },
-           body: formData
-         })
-         .then(response => response.json())
-         .then(data => {
-           const imageUrl = data.data.link;
-           const text = encodeURIComponent('私の推しキャラプロフィールを見てね！');
-           const fullUrl = encodeURIComponent(oshiMakerUrl);
-           let shareUrl = '';
- 
-           if (platform === 'line') {
-             shareUrl = `https://line.me/R/msg/text/?${text}%0A${imageUrl}%0A${fullUrl}`;
-           } else if (platform === 'x') {
-             shareUrl = `https://twitter.com/intent/tweet?text=${text}&url=${imageUrl}%0A${fullUrl}`;
-           }
- 
-           window.open(shareUrl, '_blank');
-         })
-         .catch(error => {
-           alert('画像のアップロードに失敗しました：' + error);
-         })
-         .finally(() => {
-           element.classList.remove('saving-style');
-         });
-       }).catch(err => {
-         alert('画像の生成に失敗しました：' + err);
-       });
-     }, 100);
-   }
+
+  setTimeout(() => {
+    html2canvas(element, { useCORS: true, allowTaint: true }).then(canvas => {
+      const dataURL = canvas.toDataURL('image/png');
+      const imageBlob = dataURItoBlob(dataURL);
+      const formData = new FormData();
+      formData.append('image', imageBlob);
+
+      fetch('https://api.imgur.com/3/image', {
+        method: 'POST',
+        headers: {
+          Authorization: 'Client-ID bb8064419b2b7be'
+        },
+        body: formData
+      })
+      .then(response => response.json())
+      .then(data => {
+        const imageUrl = data.data.link;
+        const text = encodeURIComponent('私の推しキャラプロフィールを見てね！');
+        const fullUrl = encodeURIComponent(oshiMakerUrl);
+        let shareUrl = '';
+
+        if (platform === 'line') {
+          shareUrl = `https://line.me/R/msg/text/?${text}%0A${imageUrl}%0A${fullUrl}`;
+        } else if (platform === 'x') {
+          shareUrl = `https://twitter.com/intent/tweet?text=${text}&url=${imageUrl}%0A${fullUrl}`;
+        }
+
+        // シェアボタンを表示して、ユーザー操作で開かせる
+        const previewContainer = document.getElementById('imagePreviewContainer');
+        const shareBtn = document.createElement('button');
+        shareBtn.textContent = platform === 'line' ? 'LINEでシェアする' : 'Xでシェアする';
+        shareBtn.style = 'margin-top: 15px; padding: 10px 20px; font-size: 1em;';
+        shareBtn.onclick = () => {
+          window.open(shareUrl, '_blank');
+        };
+
+        previewContainer.appendChild(shareBtn);
+      })
+      .catch(error => {
+        alert('画像のアップロードに失敗しました：' + error);
+      })
+      .finally(() => {
+        element.classList.remove('saving-style');
+      });
+    }).catch(err => {
+      alert('画像の生成に失敗しました：' + err);
+    });
+  }, 100);
+}
  
    function dataURItoBlob(dataURI) {
      const byteString = atob(dataURI.split(',')[1]);
