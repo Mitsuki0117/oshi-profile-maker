@@ -594,13 +594,16 @@ function addProfile() {
       })
       .then(response => response.json())
       .then(data => {
-        const imageUrl = data.data.link;
+  if (!data.success || !data.data || !data.data.link) {
+    throw new Error('Imgurのレスポンスがおかしいよ！');
+  }
+  const imageUrl = data.data.link;
         const text = encodeURIComponent('私の推しキャラプロフィールを見てね！');
         const fullUrl = encodeURIComponent(oshiMakerUrl);
         let shareUrl = '';
 
         if (platform === 'line') {
-          shareUrl = `https://line.me/R/msg/text/?${text}%0A${imageUrl}%0A${fullUrl}`;
+          shareUrl = `https://line.me/R/msg/text/?${text}%0A${fullUrl}%0A${imageUrl}`;
         } else if (platform === 'x') {
           shareUrl = `https://twitter.com/intent/tweet?text=${text}&url=${imageUrl}%0A${fullUrl}`;
         }
@@ -647,4 +650,3 @@ function addProfile() {
    }
  </script>
 </body>
-
