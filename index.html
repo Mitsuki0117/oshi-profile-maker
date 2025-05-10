@@ -14,7 +14,7 @@
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://mofu-mitsu.github.io/oshi-profile-maker/">
 <meta property="og:image" content="https://mofu-mitsu.github.io/oshi-profile-maker/ogp.png">
-
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 <!-- Twitterカード用 -->
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="♡推しプロフィールメーカー♡">
@@ -29,8 +29,13 @@
       padding: 0;
       background: linear-gradient(to bottom, #ffeef3, #ffffff);
       background-image: url('background.png');
+      max-width: 100%;
       overflow-x: hidden;
     }
+    img, iframe, canvas {
+  max-width: 100%;
+  height: auto;
+}
 
     /* 星アニメーション */
     body::before {
@@ -264,6 +269,13 @@ textarea {
   max-width: 500px;
   margin: 0 auto;
 }
+#favDisplay {
+  white-space: pre-wrap;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  width: 100%;
+  box-sizing: border-box;
+}
   </style>
 </head>
 <body>
@@ -284,7 +296,11 @@ textarea {
           <label>あだ名：</label><input type="text">
           <label>一言：</label><input type="text">
           <label>出会い：</label><input type="text">
-          <label>ここが好き：</label><textarea rows="2"></textarea>
+         <label>ここが好き：</label>
+<textarea id="sukiText" rows="2"></textarea>
+
+<!-- 保存用のdiv（非表示） -->
+<div id="sukiTextDisplay" style="display: none; white-space: pre-wrap;"></div>
           <label>誕生日：</label><input type="text">
           <label>好きな食べ物：</label><input type="text">
           <label>SNSリンク（任意）：</label><input type="url">
