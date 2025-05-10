@@ -192,22 +192,22 @@ textarea:focus {
       cursor: pointer;
     }
 
-    .animal {
-      position: absolute;
-      width: 70px;
-      z-index: 2;
-    }
+   .animal {
+  position: fixed; /* ← absoluteからfixedに変更！ */
+  width: 70px;
+  z-index: 1000; /* 十分に上のレイヤーにしておく */
+  pointer-events: none; /* ←クリックなどの邪魔を防ぐ */
+}
 
-    .dog {
-      bottom: 10px;
-      left: 10px;
-    }
+.dog {
+  bottom: 20px;
+  left: 20px;
+}
 
-    .cat {
-      bottom: 10px;
-      right: 10px;
-    }
-
+.cat {
+  bottom: 20px;
+  right: 20px;
+}
     .share-options {
       display: none;
       margin-top: 10px;
@@ -240,6 +240,9 @@ textarea:focus {
       font-size: 24px;
       padding: 10px;
     }
+     .animal {
+    width: 50px;
+  }
 
     .profile-container {
       width: 90%;
@@ -363,7 +366,6 @@ textarea {
     </div>
     <img src="dog.png" class="animal dog">
     <img src="cat.png" class="animal cat">
-  </div>
   <footer class="ad-footer">
     <p class="ad-title">♡ 推し活におすすめグッズ ♡</p>
     <div class="ad-banner">
@@ -397,7 +399,9 @@ textarea {
   <!-- 推し活トート -->
   <a href="https://hb.afl.rakuten.co.jp/ichiba/47cd1bba.09c028b2.47cd1bbc.e3d2cf97/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Fsaku-saku-shop%2Fbag-rrd001%2F&link_type=pict&ut=eyJwYWdlIjoiaXRlbSIsInR5cGUiOiJwaWN0Iiwic2l6ZSI6IjgweDgwIiwibmFtIjoxLCJuYW1wIjoicmlnaHQiLCJjb20iOjEsImNvbXAiOiJkb3duIiwicHJpY2UiOjEsImJvciI6MSwiY29sIjoxLCJiYnRuIjoxLCJwcm9kIjowLCJhbXAiOmZhbHNlfQ%3D%3D" target="_blank" rel="nofollow sponsored noopener" style="word-wrap:break-word;">
     <img src="https://hbb.afl.rakuten.co.jp/hgb/47cd1bba.09c028b2.47cd1bbc.e3d2cf97/?me_id=1281585&item_id=10001273&pc=https%3A%2F%2Fthumbnail.image.rakuten.co.jp%2F%400_mall%2Fsaku-saku-shop%2Fcabinet%2Fmado_normal%2Frrd001-mado.jpg%3F_ex%3D80x80&s=80x80&t=pict" border="0" style="margin:2px" alt="" title=""></a>
-</div>
+
+  </div>
+
 </footer>
     </div>
   </footer>
